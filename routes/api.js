@@ -212,6 +212,9 @@ module.exports = function(io){
     });
 
     router.all('/webhook', function(req, res, next) {
+        if(!req.body.notifications){
+            res.json("thank you for sending these");
+        }
         contact.find({
             phone: req.body.notifications[0].from
         })
