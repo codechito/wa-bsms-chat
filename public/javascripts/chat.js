@@ -1,6 +1,6 @@
 Vue.use(new VueSocketIO({
     debug: true,
-    connection: 'https://whatsapp.transmitsms.com:8080'
+    connection: 'http://13.239.167.74:8080'
 }))
 
 var app = new Vue({
