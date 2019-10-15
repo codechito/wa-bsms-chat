@@ -212,44 +212,48 @@ module.exports = function(io){
     });
 
     router.all('/webhook', function(req, res, next) {
-        if(!req.body.notifications){
-            res.json("thank you for sending these");
-        }
-        contact.find({
-            phone: req.body.notifications[0].from
-        })
-        .limit(1)
-        .sort({"entry": -1})
-        .exec(function(err,result){
-        if(err){
-            res.status(400).json(err);
-        }
-        if(result){
-            contact.updateOne({"_id" : ObjectId(result[0]._id)},
-                {
-                    last_message:req.body.notifications[0].message.body || req.body.notifications[0].message.caption, 
-                    $push: { 
-                        conversation: {
+        if(req.body.notifications && req.body.notifications.length ){
+            contact.find({
+                phone: req.body.notifications[0].from
+            })
+            .limit(1)
+            .sort({"entry": -1})
+            .exec(function(err,result){
+            if(err){
+                res.status(400).json(err);
+            }
+            if(result){
+                contact.updateOne({"_id" : ObjectId(result[0]._id)},
+                    {
+                        last_message:req.body.notifications[0].message.body || req.body.notifications[0].message.caption, 
+                        $push: { 
+                            conversation: {
+                                message: req.body.notifications[0].message.body || req.body.notifications[0].message.caption,
+                                type: "received",
+                                photo: req.body.notifications[0].message.url,
+                            } 
+                        }
+                },{multi: true},function(err,result){
+                    if(err){
+                        res.status(400).json(err);
+                    }
+                    if(result){
+                        io.emit('message',{
                             message: req.body.notifications[0].message.body || req.body.notifications[0].message.caption,
                             type: "received",
                             photo: req.body.notifications[0].message.url,
-                        } 
+                        });
+                        res.json("thank you for sending these");
                     }
-            },{multi: true},function(err,result){
-                if(err){
-                    res.status(400).json(err);
-                }
-                if(result){
-                    io.emit('message',{
-                        message: req.body.notifications[0].message.body || req.body.notifications[0].message.caption,
-                        type: "received",
-                        photo: req.body.notifications[0].message.url,
-                    });
-                    res.json("thank you for sending these");
-                }
+                });
+            }
             });
+            
         }
-        });
+        else{
+            res.json("thank you for sending these");
+        }
+        
         
     });
 
