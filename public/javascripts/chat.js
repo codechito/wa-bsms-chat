@@ -306,10 +306,11 @@ var app = new Vue({
           data: JSON.stringify({
             phone : vm.contacts[vm.active_id].phone,
             message : vm.newMessage.text,
+            photo : vm.newMessage.photo,
             _id: vm.contacts[vm.active_id]._id
 
           }),
-          url: '/whatsapp/api/wa/message/send'
+          url: '/whatsapp/api/wa/message/send/photo'
         };
         axios(options)
           .then(function(response){
