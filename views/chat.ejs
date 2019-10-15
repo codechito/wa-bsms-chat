@@ -1,0 +1,150 @@
+<html>
+<head>
+    <title>Chat</title>
+
+  <link rel='stylesheet' href='/stylesheets/chat.css' />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+
+</head>
+<body>
+<div class="container " id="container">
+<div class="messaging">
+      <div class="inbox_msg">
+        <div class="inbox_people">
+          <div class="headind_srch">
+            <div class="recent_heading">
+              <h4>Recent</h4>
+            </div>
+            <div class="srch_bar">
+              <div class="stylish-input-group">
+                <input type="text" class="search-bar"  placeholder="Search" >
+                <span class="input-group-addon">
+                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                </span> 
+                <b-button pill variant="success" v-b-modal.modal-add-contact v-bind:class="{ 'msg_add_btn': true }" ><i class="fa fa-user-plus" aria-hidden="true"></i></b-button>
+              </div>
+            </div>
+          </div>
+          <div class="inbox_chat">
+            <div class="chat_list" v-for="(people, id) in contacts" :class="{ 'active_chat': active_id === id }" v-on:click="setActive(id)">
+              <div class="chat_people">
+                <div class="chat_img"> <img v-bind:src="people.avatar" alt="sunil"> </div>
+                <div class="chat_ib">
+                  <h5>{{ people.name }}</h5>
+                  <p>{{ people.last_message }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mesgs">
+          <div v-if="contacts[active_id]" class="msg_history">
+            <div v-for="(message, key ) in contacts[active_id].conversation" :class="{ 'incoming_msg': message.type === 'received', 'outgoing_msg': message.type === 'send'}">
+              <div v-if="message.type === 'received'" class="incoming_msg_img"> <img v-bind:src="contacts[active_id].avatar" alt="sunil"> </div>
+              <div v-if="message.type === 'received'" class="received_msg">
+                <div class="received_withd_msg">
+                  <p><img v-if="message.photo" class="img-display" :src="message.photo"/><br v-if="message.photo"/>{{ message.message }}</p>
+                  <span class="time_date"> 11:01 AM    |    June 9</span></div>
+              </div>
+              <div v-if="message.type === 'send'" class="sent_msg">
+                  <p><img v-if="message.photo" class="img-display" :src="message.photo"/><br v-if="message.photo"/>{{ message.message }}</p>
+                  <span class="time_date"> 11:01 AM    |    June 9</span> 
+              </div>
+            </div>
+          </div>
+          <div v-if="contacts[active_id]" class="type_msg">
+            <div class="input_msg_write">
+              <input type="text" v-model="newMessage.text" class="write_msg" placeholder="Type a message" />
+              <b-button pill variant="success" v-b-modal.modal-send-photo v-bind:class="{ 'msg_photo_btn': true }" ><i class="fa fa-camera" aria-hidden="true"></i></b-button>
+              <b-button v-on:click="sendText()" pill variant="success" v-bind:class="{ 'msg_send_btn': true }" ><i class="fa fa-paper-plane-o" aria-hidden="true"></i></b-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <b-modal
+    id="modal-add-contact"
+    ref="modal"
+    title="Add new contact"
+    @ok="handleSave"
+    >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <b-form-group
+          label="Name"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="newContact.name"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Mobile"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="newContact.phone"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Avatar"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="newContact.avatar"
+            required
+          ></b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
+
+    <b-modal
+    id="modal-send-photo"
+    ref="modal"
+    title="Send a photo"
+    @ok="sendPhoto"
+    >
+      <form ref="form" @submit.stop.prevent="handleSubmit">
+        <b-form-group
+          label="Message"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="newMessage.text"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Photo URL"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-input
+            id="name-input"
+            v-model="newMessage.photo"
+            required
+          ></b-form-input>
+        </b-form-group>
+      </form>
+    </b-modal>
+  </div>
+    <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+    <script type="text/javascript" src="/javascripts/chat.js"></script>
+  </body>
+  </html>
