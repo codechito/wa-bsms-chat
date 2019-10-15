@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/web', webRouter);
 app.use('/whatsapp', apiRouter);
 
-var port = 3000
+var port = 8080
 app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io')(server);
