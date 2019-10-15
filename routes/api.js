@@ -76,15 +76,18 @@ module.exports = function(io){
 
     router.post('/api/wa/message/invite', function(req, res, next) {
 
+        var templates = {
+            burst_ticket_update : [req.body.name,'100101010'],
+            burst_shipping_update : [req.body.name,'100101010'],
+            burst_reservation_update : [req.body.name],
+            burst_appointment_update : [req.body.name,'Schnider','Saturday 4pm']
+        }
         var content = { 
             to : [ req.body.phone ],
             message : {
                 "type": "template",
-                "template_name": "burst_ticket_update",
-                "params": [
-                    req.body.name,
-                    "001TRYOUTTICKET1000"
-                ]
+                "template_name": req.body.template,
+                "params": templates[req.body.template]
             }
         };
         const options = {

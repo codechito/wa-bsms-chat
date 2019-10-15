@@ -210,7 +210,13 @@ var app = new Vue({
       newMessage:{
         photo : "",
         text: ""
-      }
+      },
+      template:"",
+      template_list: [
+        "burst_ticket_update",
+        "burst_shipping_update",
+        "burst_reservation_update",
+        "burst_appointment_update"]
     },
     methods : {
       setActive(idx) {
@@ -218,6 +224,8 @@ var app = new Vue({
       },
       handleSave(){
         var vm = this;
+        this.newContact.template = this.template;
+        console.log(JSON.stringify(this.newContact));
         const options = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

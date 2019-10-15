@@ -106,6 +106,13 @@
             required
           ></b-form-input>
         </b-form-group>
+        <b-form-group
+          label="Template"
+          label-for="name-input"
+          invalid-feedback="Name is required"
+        >
+          <b-form-select v-model="template" :options="template_list" size="sm" class="form-control"></b-form-select>
+        </b-form-group>
       </form>
     </b-modal>
 
