@@ -22,11 +22,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/web', webRouter);
 app.use('/whatsapp', apiRouter);
 
-app.all('/whatsapp/webhook',function(req,res){
-  io.emit('message',"testing");
-  res.json("ok");
-});
-
 var port = 3000
 app.set('port', port);
 var server = http.createServer(app);

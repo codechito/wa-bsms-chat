@@ -225,6 +225,9 @@ var app = new Vue({
       handleSave(){
         var vm = this;
         this.newContact.template = this.template;
+        if(!this.newContact.avatar){
+          this.newContact.avatar = 'https://ptetutorials.com/images/user-profile.png';
+        }
         console.log(JSON.stringify(this.newContact));
         const options = {
           method: 'POST',
