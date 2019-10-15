@@ -237,6 +237,11 @@ module.exports = function(io){
                     res.status(400).json(err);
                 }
                 if(result){
+                    io.emit('message',{
+                        message: req.body.notifications[0].message.body || req.body.notifications[0].message.caption,
+                        type: "received",
+                        photo: req.body.notifications[0].message.url,
+                    });
                     res.json("thank you for sending these");
                 }
             });
@@ -244,5 +249,6 @@ module.exports = function(io){
         });
         
     });
-    return router
+
+    return router;
 }

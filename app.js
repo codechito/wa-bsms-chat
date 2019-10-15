@@ -4,8 +4,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var http = require('http');
 
-var webRouter = require('./routes/web');
-var apiRouter = require('./routes/api')(io);
+
 
 var app = express();
 
@@ -19,13 +18,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/web', webRouter);
-app.use('/whatsapp', apiRouter);
+
 
 var port = 8080
 app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io')(server);
+
+var webRouter = require('./routes/web');
+var apiRouter = require('./routes/api')(io);
+
+app.use('/web', webRouter);
+app.use('/whatsapp', apiRouter);
 
 server.listen(port);
 

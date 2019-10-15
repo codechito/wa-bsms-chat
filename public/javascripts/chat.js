@@ -1,3 +1,8 @@
+Vue.use(new VueSocketIO({
+    debug: true,
+    connection: 'http://localhost:8080'
+}))
+
 var app = new Vue({
     el: '#container',
     data: {
@@ -337,6 +342,14 @@ var app = new Vue({
             console.log(error);
             alert('Problem getting contacts, ' + JSON.stringify(error));
           });
+      }
+    },
+    sockets: {
+      connect: function () {
+          console.log('socket connected')
+      },
+      message: function (data) {
+        this.getContacts();
       }
     },
     mounted : function () {
