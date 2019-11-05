@@ -1,0 +1,7 @@
+version: '3.7'    
+
+services:
+  wa-app:
+    image: wabsms:dev
+    ports:
+      - "8000:8080" 

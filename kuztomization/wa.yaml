@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wa-burstsms-chat
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      wa: web
+  template:
+    metadata:
+      labels:
+        wa: web
+    spec:
+      containers:
+      - name: bb-site
+        image: wabsms:dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wa-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    wa: web
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30001
